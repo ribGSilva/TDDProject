@@ -10,4 +10,9 @@ public class QuantidadeDeEspectadores{
 	public static QuantidadeDeEspectadores nova(Integer quantidade) {
 		return new QuantidadeDeEspectadores(quantidade);
 	}
+	@Override
+	public String toString() {
+		return "QuantidadeDeEspectadores [quantidade=" + quantidade + "]";
+	}
+	
 }

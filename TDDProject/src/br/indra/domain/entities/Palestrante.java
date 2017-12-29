@@ -10,9 +10,7 @@ public class Palestrante {
 	public Palestrante(String nome) {
 		this.nome = nome;
 	}
-	
-	
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -40,9 +38,10 @@ public class Palestrante {
 
 	@Override
 	public String toString() {
-	
-		return this.nome;
+		return "Palestrante [nome=" + nome + "]";
 	}
+
+	
 	
 	
 }

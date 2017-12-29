@@ -16,6 +16,16 @@ public class RepositorioDeCronograma {
 	}
 
 	public List<Cronograma> todos() {
+		return this.cronogramas;
+	}
+	
+	public List<Cronograma> todosAtivos() {
+		List<Cronograma> cronogramas = new ArrayList<Cronograma>();
+		for (Cronograma cronograma : this.cronogramas) {
+			if (cronograma.isAtivo()) {
+				cronogramas.add(cronograma);
+			}
+		}
 		return cronogramas;
 	}
 
@@ -26,13 +36,24 @@ public class RepositorioDeCronograma {
 	public Cronograma busquePor(Palestrante palestrante, Data data, Hora hora) {
 		Cronograma retorno = null;
 		for (Cronograma cronograma : cronogramas) {
-			if ( palestrante.equals(cronograma.getPalestrante())
-					&& data.equals(cronograma.getData())
+			if (palestrante.equals(cronograma.getPalestrante()) && data.equals(cronograma.getData())
 					&& hora.equals(cronograma.getHora())
-					)
+					&& cronograma.isAtivo()) {
 				retorno = cronograma;
+				break;
+			}
 		}
-		return retorno;		
+		return retorno;
 	}
 
+	public List<Cronograma> busquePor(Data data) {
+		List<Cronograma> cronogramas = new ArrayList<Cronograma>();
+		for (Cronograma cronograma : this.cronogramas) {
+			if (data.equals(cronograma.getData())
+					&& cronograma.isAtivo()) {
+				cronogramas.add(cronograma);
+			}
+		}
+		return cronogramas;
+	}
 }

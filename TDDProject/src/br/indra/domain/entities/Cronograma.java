@@ -1,7 +1,5 @@
 package br.indra.domain.entities;
 
-import java.util.Calendar;
-
 import br.indra.domain.types.Data;
 import br.indra.domain.types.Duracao;
 import br.indra.domain.types.Hora;
@@ -11,10 +9,10 @@ public class Cronograma {
 
 	private Data data;
 	private Hora hora;
-	private Duracao duracao; 
+	private Duracao duracao;
 	private Palestrante palestrante;
 	private QuantidadeDeEspectadores quantidadeEspectadores;
-	
+
 	private Boolean ativo;
 
 	public Cronograma(Data data, Hora hora, Duracao duracao, Palestrante palestrante,
@@ -28,15 +26,35 @@ public class Cronograma {
 		this.ativo = Boolean.TRUE;
 	}
 
-	private Cronograma() {
-		this.ativo = Boolean.TRUE;
-	}
-
 	public Cronograma cancele() {
 		this.ativo = Boolean.FALSE;
 		return this;
 	}
-	
+
+	public Boolean isAtivo() {
+		return this.ativo;
+	}
+
+	public Palestrante getPalestrante() {
+		return this.palestrante;
+	}
+
+	public Data getData() {
+		return this.data;
+	}
+
+	public Hora getHora() {
+		return this.hora;
+	}
+
+	public Cronograma altere(Palestrante palestrante, Data data, Hora hora, QuantidadeDeEspectadores quantidade) {
+		this.palestrante = palestrante;
+		this.data = data;
+		this.hora = hora;
+		this.quantidadeEspectadores = quantidade;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -98,24 +116,7 @@ public class Cronograma {
 				+ ", quantidadeEspectadores=" + quantidadeEspectadores + ", ativo=" + ativo + "]";
 	}
 
-	public Palestrante getPalestrante() {
-		return this.palestrante;
+	private Cronograma() {
 	}
 
-	public Data getData() {
-		return this.data;
-	}
-
-	public Hora getHora() {
-		return this.hora;
-	}
-
-	public Cronograma altere(Palestrante palestrante, Data data, Hora hora, QuantidadeDeEspectadores quantidade) {
-		this.palestrante = palestrante;
-		this.data = data;
-		this.hora = hora;
-		this.quantidadeEspectadores = quantidade;
-		return this;
-	}
-	
 }

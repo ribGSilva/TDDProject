@@ -19,4 +19,9 @@ public class Duracao {
 		return new Duracao(data, hora, quantidadeDeHoras);
 	}
 
+	@Override
+	public String toString() {
+		return "Duracao [data=" + data + ", hora=" + hora + ", quantidadeDeHoras=" + quantidadeDeHoras + "]";
+	}
+
 }

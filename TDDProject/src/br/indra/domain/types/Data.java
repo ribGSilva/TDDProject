@@ -14,6 +14,13 @@ public class Data {
 		return new Data(data);
 	}
 
+	
+	
+	@Override
+	public String toString() {
+		return "Data: "+this.data;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -37,11 +44,6 @@ public class Data {
 		} else if (!data.equals(other.data))
 			return false;
 		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return "Data: "+this.data;
 	}
 
 	

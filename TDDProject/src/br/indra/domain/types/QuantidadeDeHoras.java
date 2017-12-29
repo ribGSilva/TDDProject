@@ -11,5 +11,9 @@ public class QuantidadeDeHoras{
 	public static QuantidadeDeHoras nova(Integer quantidade) {
 		return new QuantidadeDeHoras(quantidade);
 	}
+	@Override
+	public String toString() {
+		return "QuantidadeDeHoras [quantidade=" + quantidade + "]";
+	}
 
 }
