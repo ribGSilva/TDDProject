@@ -1,6 +1,5 @@
 package test;
 
-import java.util.Calendar;
 import java.util.List;
 
 import br.indra.domain.entities.Cronograma;
@@ -13,6 +12,11 @@ import br.indra.domain.types.Duracao;
 import br.indra.domain.types.Hora;
 import br.indra.domain.types.QuantidadeDeEspectadores;
 import br.indra.domain.types.QuantidadeDeHoras;
+import br.indra.exceptions.SemDadosMinimosParaConstrucao;
+import br.indra.log.Log;
+import br.indra.vo.AlteracaoDeCronogramaDeVO;
+import br.indra.vo.AlteracaoDeCronogramaParaVO;
+import br.indra.vo.AlteracaoDeCronogramaVO;
 
 public class TesteCronograma {
 
@@ -24,19 +28,24 @@ public class TesteCronograma {
 		testeVisualizarTodosOsCronogramas();
 		testeAlterarCronograma();
 		testeCancelarCronogramaPorData();
+		testeVisualizarTodosOsCronogramas();
 		testeCancelarCronogramaPorPalestrante();
 		testeCancelarCronogramaPorPalestranteDataEHora();
 	}
 
 	private static void testeVisualizarTodosOsCronogramas() {
 		ServicoDeCronogramas servicoDeCronogramas = ServicoDeCronogramas.getInstance();
+
 		List<Cronograma> busqueTodos = servicoDeCronogramas.busqueTodos();
 
 		if (busqueTodos == null) {
-			System.out.println("Objeto Nulo");
-		}
-		if (busqueTodos.isEmpty()) {
-			System.out.println("Objeto Vazio");
+			Log.log("Objeto Nulo");
+		} else if (busqueTodos.isEmpty()) {
+			Log.log("Objeto Vazio");
+		} else {
+			for (Cronograma cronograma : busqueTodos) {
+				System.out.println(cronograma);
+			}
 		}
 	}
 
@@ -48,39 +57,47 @@ public class TesteCronograma {
 
 		Cronograma cronograma = FabricaDeCronograma.crie(data, hora, duracao,
 				FabricaDePalestrante.crie("Joseh Antonio"), quantidadeDeEspectadores);
-		ServicoDeCronogramas servicoDeCronogramas = ServicoDeCronogramas.getInstance();
-		Boolean adicionar = servicoDeCronogramas.adicionar(cronograma);
+		Boolean adicionar = ServicoDeCronogramas.getInstance().adicionar(cronograma);
 
 		if (adicionar == null)
-			System.out.println("Deu NULL ao adicionar Cronograma!");
+			Log.log("Deu NULL ao adicionar Cronograma!");
 		if (adicionar.equals(Boolean.FALSE))
-			System.out.println("Deu FALSo e nao inseriu o Cronograma!");
+			Log.log("Deu FALSo e nao inseriu o Cronograma!");
 
 	}
 
 	private static void testeAlterarCronograma() {
-		Data data = Data.nova("28/12/2017");
-		Hora hora = Hora.nova("09:00");
-		Palestrante palestrante = FabricaDePalestrante.crie("Joseh Antonio");
 
-		Cronograma cronogramaEncontrado = ServicoDeCronogramas.getInstance().busquePorPalestranteDataEHora(palestrante,
-				data, hora);
+		try {
+			AlteracaoDeCronogramaVO alteracaoDeCronograma = 
+			
+			AlteracaoDeCronogramaVO.nova().de(
 
-		if (cronogramaEncontrado == null)
-			System.out.println("Achou nada");
-		else
-			cronogramaEncontrado.altere(FabricaDePalestrante.crie("José Antonio"), Data.nova("29/01/2017"),
-					Hora.nova("00:00"), QuantidadeDeEspectadores.nova(50000));
+					AlteracaoDeCronogramaDeVO.builder().paraPalestrante(FabricaDePalestrante.crie("Joseh Antonio"))
+							.naData(Data.nova("28/12/2017")).naHora(Hora.nova("09:00")).build()
+			).para(
+					new AlteracaoDeCronogramaParaVO(Data.nova("78/12/2017"), Hora.nova("19:00"),
+							FabricaDePalestrante.crie("Joseh Maria"), QuantidadeDeEspectadores.nova(100)));
 
-		System.out.println("Cronograma alterado: "+cronogramaEncontrado);
-		ServicoDeCronogramas.getInstance().alterar(cronogramaEncontrado);
+			ServicoDeCronogramas.getInstance().alterar(alteracaoDeCronograma);
+
+		} catch (SemDadosMinimosParaConstrucao e) {
+			Log.log(SemDadosMinimosParaConstrucao.class, "[ERROR]: "+e.getMessage());
+			e.printStackTrace();
+			Log.log("***********");
+		} catch (Exception ex) {
+			Log.log("Deu Problema Feio! Em tempo de Execução");
+		}
 
 	}
 
 	private static void testeCancelarCronogramaPorData() {
-		// List<Cronograma> cronogramas =
-		// ServicoDeCronogramas.busquePorData(DataDoCronograma);
-		// ServicoDeCronogramas.cancelar(cronogramas);
+		List<Cronograma> cronogramas = ServicoDeCronogramas.getInstance().busquePorData(Data.nova("78/12/2017"));
+		ServicoDeCronogramas.getInstance().cancelar(cronogramas);
+		if (cronogramas.size() != 1)
+			Log.log("Não cancelou o que deveria");
+		else
+			Log.log("Cancelado: " + cronogramas);
 	}
 
 	private static void testeCancelarCronogramaPorPalestrante() {
